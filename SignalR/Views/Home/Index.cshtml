@@ -1,0 +1,60 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <h1 id="titleName">Chat</h1>
+    <input type="text" id="txtMessage"/>
+    <button id="btnSend">Gönder</button>
+    <hr />
+    <p id="aktif"></p>
+    <ul id="ChatList"></ul>
+
+    <script src="~/scripts/jquery-1.6.4.js"></script> @*SingalR jqueriye bağımlı çalışıyor*@
+    <script src="~/scripts/jquery.signalR-2.4.1.js"></script>
+    
+    <script src="signalr/hubs"></script>@*Çalışırken oluşuyor*@
+</body>
+</html>
+
+<script>
+    $(document).ready(function(){
+    
+        var name = prompt("Adınızı Giriniz");
+        
+        document.querySelector('#titleName').innerText = 'Hoşgeldin ' + name;
+
+        //Hub tanımlanır (Client tarafı)
+        $.connection.hub.start();
+        var chat = $.connection.chatHub;
+
+
+        //Server den gelen (Yazan dışındakiler)
+        chat.client.getMessageOther = function (name, message)
+        {
+            $('#ChatList').append("<li>"+ name+" :"+ message+"</li>");
+        };
+
+        //Server den gelen (Yazan)
+        chat.client.getMessageCaller = function (message) {
+            $('#ChatList').append("<li>"+ message + "</li>");
+        };
+        
+
+        //Server e giden
+        $("#btnSend").click(function () {
+            var message = $('#txtMessage').val();
+            chat.server.sendMessage(name, message);
+            $('#txtMessage').val("");
+        });
+    
+    });
+</script>
