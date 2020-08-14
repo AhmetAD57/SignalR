@@ -34,7 +34,7 @@
 
         //Hub tanımlanır (Client tarafı)
         $.connection.hub.start();
-        var chat = $.connection.chatHub;
+        var chat = $.connection.chatHub; //hub yazarken ilk harf küçük olmalı
 
 
         //Server den gelen (Yazan dışındakiler)
@@ -44,7 +44,7 @@
         };
 
         //Server den gelen (Yazan)
-        chat.client.getMessageCaller = function (message) {
+        chat.client.getMessageCaller = function (message) { //Metod ismi yazarken ilk harf küçük olmalı
             $('#ChatList').append("<li>"+ message + "</li>");
         };
         
@@ -56,5 +56,15 @@
             $('#txtMessage').val("");
         });
     
+
+        function join(name)
+        {
+            chat.server.join(name);
+        }
+
+        function spesificmessage(message, user)
+        {
+            chat.server.spesificMessage(message, user);
+        }
     });
 </script>
