@@ -21,7 +21,7 @@
     <script src="~/scripts/jquery-1.6.4.js"></script> @*SingalR jqueriye bağımlı çalışıyor*@
     <script src="~/scripts/jquery.signalR-2.4.1.js"></script>
     
-    <script src="signalr/hubs"></script>@*Çalışırken oluşuyor*@
+    @*<script src="signalr/hubs"></script>*@@*Çalışırken oluşuyor (olayıncada oluyor)*@
 
     <script src='/signalr/js'></script>
 </body>
@@ -35,9 +35,11 @@
         document.querySelector('#titleName').innerText = 'Hoşgeldin ' + name;
 
         //Hub tanımlanır (Client tarafı)
-        $.connection.hub.start();
+        $.connection.hub.start(); //.done(function(){}) .fail(function(){}) metodları vardır, eğer hemen sorgu yapılacaksa Kullanılmalılar
         var chat = $.connection.chatHub; //hub yazarken ilk harf küçük olmalı
 
+        $.connection.hub.logging = true; //Nelerin çalıştığını gösterir
+        $.connection.hub.log("Connected") //Log mesajı yazdırır
 
         //Server den gelen (Yazan dışındakiler)
         chat.client.getMessageOther = function (name, message)
@@ -58,7 +60,11 @@
             $('#txtMessage').val("");
         });
     
-
+        //chat.server.getDate()=function(date) //Veri döndüren metod, Kullanırken done fail metudu kullanılmalı
+        //{
+        //    console.log(date);
+        //}
+       
         function join(name)
         {
             chat.server.join(name);

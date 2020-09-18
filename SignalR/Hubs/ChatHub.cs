@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Collections.Concurrent;
+using Microsoft.AspNet.SignalR.Hubs;
 
 namespace SignalR.Hubs
-{
+{   //[HubName("chat")] //Hub ın adını değiştirir
     public class ChatHub : Hub
     {
         public static ConcurrentDictionary<string, string> ConnectedUsers = new ConcurrentDictionary<string, string>(); //Bağlı kullanıcıların bilgisi tutulur
-
+        //[HubMethodName("Send")] //Metotun adını değiştirir
         public void SendMessage(string name, string message)
         {   
             Clients.Others.GetMessageOther(name, message); //Yazan client dışındakilere gider
@@ -34,6 +35,11 @@ namespace SignalR.Hubs
 
         }
 
+        public DateTime GetDate() //Değer döndüren bir fonksiyon çağırıldığında cliend a veri göndermeye gerek kalmaz
+        {
+            return DateTime.Now;
+        }
+
         public void SpesificMessage(string message, string name)
         {
             var userid = ConnectedUsers.Where(i => i.Value == name).FirstOrDefault(); //İsime bağlı user bulunuyor
@@ -46,7 +52,7 @@ namespace SignalR.Hubs
         {
             Clients.Caller.GetMessageCaller("Hoşgeldin");
             string id = Context.ConnectionId;
-
+            
             return base.OnConnected();
         }
 
