@@ -1,1 +1,3 @@
-# SignalR Örnek
+# SignalR
+
+SignalR example.
